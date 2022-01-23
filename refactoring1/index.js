@@ -61,8 +61,6 @@ function statement(invoice, plays) {
   const format = new Intl.NumberFormat('en-Us', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format;
 
   for (let perf of invoice.performances) {
-    const amount = getAmountForPlay(perf);
-
     //포인트 적립
     volumnCredits += Math.max(perf.audience - 30, 0);
 
@@ -70,16 +68,13 @@ function statement(invoice, plays) {
     if ("comedy" === getPlayTitle(perf).type) volumnCredits += Math.floor(perf.audience / 5);
 
     //청구 내역 출력
-    result += `${getPlayTitle(perf).name} : ${format(amount / 100)} (${perf.audience}석)\n`;
-    totalAmount += amount;
+    result += `${getPlayTitle(perf).name} : ${format( getAmountForPlay(perf) / 100)} (${perf.audience}석)\n`;
+    totalAmount += getAmountForPlay(perf);
   }
 
   result += `총액: ${format(totalAmount / 100)}\n`;
   result += `적립 포인트: ${volumnCredits}점\n`;
   return result;
 };
-
-
-
 
 statement(invoices[0], plays);
