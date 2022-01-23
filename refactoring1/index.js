@@ -48,6 +48,10 @@ function getAmountForPlay(play, performance) {
   return amount;
 };
 
+function getPlayTitle(performance) {
+  return plays[performance.playId];
+}
+
 function statement(invoice, plays) {
   let totalAmount = 0;
   let volumnCredits = 0;
@@ -57,17 +61,16 @@ function statement(invoice, plays) {
   const format = new Intl.NumberFormat('en-Us', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format;
 
   for (let perf of invoice.performances) {
-    const play = plays[perf.playId];
-    const amount = getAmountForPlay(play, perf);
+    const amount = getAmountForPlay(getPlayTitle(perf), perf);
 
     //포인트 적립
     volumnCredits += Math.max(perf.audience - 30, 0);
 
     // 희극의 경우 관객 5명마다 추가 포인트 제공
-    if ("comedy" === play.type) volumnCredits += Math.floor(perf.audience / 5);
+    if ("comedy" === getPlayTitle(perf).type) volumnCredits += Math.floor(perf.audience / 5);
 
     //청구 내역 출력
-    result += `${play.name} : ${format(amount / 100)} (${perf.audience}석)\n`;
+    result += `${getPlayTitle(perf).name} : ${format(amount / 100)} (${perf.audience}석)\n`;
     totalAmount += amount;
   }
 
