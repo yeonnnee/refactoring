@@ -24,10 +24,10 @@ const plays = {
   othello:{name:"Othello", type:"tragedy"}
 }
 
-function getAmountForPlay(play, performance) {
+function getAmountForPlay(performance) {
   let amount = 0;
 
-  switch (play.type) {
+  switch (getPlayTitle(performance).type) {
     case "tragedy":
       amount = 40000;
       if (performance.audience > 30) {
@@ -43,7 +43,7 @@ function getAmountForPlay(play, performance) {
       break;
 
     default:
-      throw new Error(`알 수 없는 장르: ${play.type}`);
+      throw new Error(`알 수 없는 장르: ${getPlayTitle(performance).type}`);
   }
   return amount;
 };
@@ -61,7 +61,7 @@ function statement(invoice, plays) {
   const format = new Intl.NumberFormat('en-Us', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format;
 
   for (let perf of invoice.performances) {
-    const amount = getAmountForPlay(getPlayTitle(perf), perf);
+    const amount = getAmountForPlay(perf);
 
     //포인트 적립
     volumnCredits += Math.max(perf.audience - 30, 0);
